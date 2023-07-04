@@ -3,10 +3,24 @@ import mongoose from 'mongoose';
 import express from 'express';
 import Messages from './Schema/dbMsg.js';
 import 'dotenv/config';
+import Pusher from "pusher";
 
 // app config
 const app = express();
 const port = process.env.PORT || 9000;
+
+
+const pusher = new Pusher({
+  appId: "1629618",
+  key: "99184aadb6e95ee75def",
+  secret: "e3bc1fce03a44dcb52e1",
+  cluster: "ap2",
+  useTLS: true
+});
+
+pusher.trigger("my-channel", "my-event", {
+  message: "hello world"
+});
 
 //middleware
 app.use(express.json());
@@ -35,19 +49,19 @@ mongoose.connect(
 //api routes
 
 
-// app.get('/',(req,res)=>{res.status(200).send('heyy')});
+app.get('/',(req,res)=>{res.status(200).send('heyy')});
 
-// app.post('/messages/new',(req,res)=>{
-//     const dbMsg = req.body;
-//     Messages.create(dbMsg);
+app.post('/messages/new',(req,res)=>{
+    const dbMsg = req.body;
+    Messages.create(dbMsg);
 
-// });
+});
 
-// app.get('/messages/sync',
-//     async( req , res)=>{
-//      const msg = await Messages.find();
-//     console.log(msg)}
-// )
+app.get('/messages/sync',
+    async( req , res)=>{
+     const msg = await Messages.find();
+    console.log(msg)}
+)
 
 
 //listen
