@@ -4,6 +4,7 @@ import express from 'express';
 import Messages from './Schema/dbMsg.js';
 import 'dotenv/config';
 import Pusher from "pusher";
+import cors from 'cors';
 
 // app config
 const app = express();
@@ -24,12 +25,15 @@ pusher.trigger("my-channel", "my-event", {
 
 //middleware
 app.use(express.json());
+app.use(cors());
 
-app.use((req,res, next)=>{
-    res.setHeader("Acess-Control-Allow-Origin","*");
-    res.setHeader("Acess-Control-Allow-Headers","*");
-    next();
-});
+// for end to end encryption of messages
+
+// app.use((req,res, next)=>{
+//     res.setHeader("Acess-Control-Allow-Origin","*");
+//     res.setHeader("Acess-Control-Allow-Headers","*");
+//     next();
+// });
 
 //DB config
 
