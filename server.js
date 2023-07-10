@@ -8,7 +8,7 @@ import cors from 'cors';
 
 // app config
 const app = express();
-const port = process.env.PORT || 9000;
+const port =  9000;
 
 
 const pusher = new Pusher({
@@ -19,9 +19,7 @@ const pusher = new Pusher({
     useTLS: true
 });
 // pusher added to the server that syncs the mongodb and reactjs for realtime changes, as it refreshes the frontend for new changes when there is any change detected in database
-pusher.trigger("my-channel", "my-event", {
-    message: "hello world"
-});
+
 
 //middleware
 app.use(express.json());
@@ -37,7 +35,7 @@ app.use(cors());
 
 //DB config
 
-const url = 'mongodb+srv://rajvinder4131:' + process.env.MONGO + '@clone.j5wo9ep.mongodb.net/clonedb?retryWrites=true&w=majority'; //connection string to atlas
+const url = 'mongodb+srv://rajvinder4131:dEGVEkLgpwOXXp3P@clone.j5wo9ep.mongodb.net/clonedb?retryWrites=true&w=majority'; //connection string to atlas
 
 //connection function that uses mongoose to connect to the atlas
 mongoose.connect(
@@ -68,8 +66,9 @@ con.on('open', function () {
             pusher.trigger('messages', 'inserted',{
                 name: mesg.user,
                 message: mesg.message,
+                timestamp : mesg.timestamp,
             });
-            console.log(mesg)
+            // console.log(mesg)
             //triggers when a message is inserted in db
         }else{
             console.log('error')
@@ -97,7 +96,7 @@ app.post('/messages/new', (req, res) => {
 app.get('/messages/sync',
     async (req, res) => {
         const msg = await Messages.find();
-        console.log(msg)
+        // console.log(msg)
     }
 )
 
