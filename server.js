@@ -17,7 +17,11 @@ const pusher = new Pusher({
     secret: "e3bc1fce03a44dcb52e1",
     cluster: "ap2",
     useTLS: true
-});
+  });
+
+// //   pusher.trigger("my-channel", "my-event", {
+// //     message: "hello world"
+// //   });
 // pusher added to the server that syncs the mongodb and reactjs for realtime changes, as it refreshes the frontend for new changes when there is any change detected in database
 
 
@@ -67,8 +71,9 @@ con.on('open', function () {
                 name: mesg.user,
                 message: mesg.message,
                 timestamp : mesg.timestamp,
+                recieved : mesg.recieved
             });
-            // console.log(mesg)
+            console.log(mesg)
             //triggers when a message is inserted in db
         }else{
             console.log('error')
@@ -90,6 +95,8 @@ app.get('/', (req, res) => { res.status(200).send('heyy') });
 app.post('/messages/new', (req, res) => {
     const dbMsg = req.body;
     Messages.create(dbMsg);
+    res.status(200)
+    res.json(dbMsg);
 
 });
 
@@ -97,6 +104,7 @@ app.get('/messages/sync',
     async (req, res) => {
         const msg = await Messages.find();
         // console.log(msg)
+        res.json(msg);
     }
 )
 
